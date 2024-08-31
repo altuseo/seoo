@@ -54,7 +54,8 @@ st.markdown("""
 
 # Functions (keep your existing functions here)
 def get_serp_comp(results):
-    # ... (keep your existing function)
+    # Your implementation for extracting URLs from SERP results
+    return [result['link'] for result in results.get('organic_results', [])]
 
 def compare_keywords(keyword1, keyword2, api_key):
     params = {
@@ -65,7 +66,7 @@ def compare_keywords(keyword1, keyword2, api_key):
         "api_key": api_key
     }
 
-   # Perform search for the first keyword
+    # Perform search for the first keyword
     search = GoogleSearch(params)
     results1 = search.get_dict()
 
@@ -175,17 +176,7 @@ def compare_keywords(keyword1, keyword2, api_key):
             table += f'<tr><td colspan="2" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
     table += '</table>'
 
-    return HTML(table)
-
-# Get keywords from the user
-keyword1 = input("Enter the first keyword: ")
-keyword2 = input("Enter the second keyword: ")
-
-# Call the compare_keywords function
-url_table = compare_keywords(keyword1, keyword2)
-
-# Display the table
-display(url_table)
+    return urls1, urls2, exact_matches, domain_color_map, color_map, similarity, table
 
 def main():
     st.title("🔍 SERP Similarity Tool")
@@ -208,7 +199,7 @@ def main():
             st.warning("Please enter both keywords.")
         else:
             with st.spinner("Analyzing SERP similarity..."):
-                urls1, urls2, exact_matches, domain_color_map, color_map, similarity = compare_keywords(keyword1, keyword2, api_key)
+                urls1, urls2, exact_matches, domain_color_map, color_map, similarity, table = compare_keywords(keyword1, keyword2, api_key)
 
             st.markdown(f"<div class='similarity-score'>SERP Similarity: {similarity}%</div>", unsafe_allow_html=True)
 
@@ -218,26 +209,19 @@ def main():
                 st.subheader(f"Results for '{keyword1}'")
                 for url in urls1:
                     if url in exact_matches:
-                        st.markdown(f'<div class="url-box" style="background-color: {color_map[url]};">{url}</div>', unsafe_allow_html=True)
-                    elif url in domain_color_map:
-                        st.markdown(f'<div class="url-box" style="background-color: {domain_color_map[url]}; border: 2px solid #e74c3c;">{url} 💀</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="url-box" style="background-color: {color_map.get(url, "#f9f9f9")};">{url}</div>', unsafe_allow_html=True)
                     else:
-                        st.markdown(f'<div class="url-box">{url}</div>', unsafe_allow_html=True)
+                        st.write(url)
 
             with col2:
                 st.subheader(f"Results for '{keyword2}'")
                 for url in urls2:
                     if url in exact_matches:
-                        st.markdown(f'<div class="url-box" style="background-color: {color_map[url]};">{url}</div>', unsafe_allow_html=True)
-                    elif url in domain_color_map:
-                        st.markdown(f'<div class="url-box" style="background-color: {domain_color_map[url]}; border: 2px solid #e74c3c;">💀 {url}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="url-box" style="background-color: {color_map.get(url, "#f9f9f9")};">{url}</div>', unsafe_allow_html=True)
                     else:
-                        st.markdown(f'<div class="url-box">{url}</div>', unsafe_allow_html=True)
+                        st.write(url)
 
-            st.info("💡 Exact matches are highlighted with the same color. URLs with a 💀 icon indicate common domains but different pages.")
-
-    st.markdown("---")
-    st.markdown("Created with ❤️ by [Your Name/Company]")
+            st.markdown(table, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
