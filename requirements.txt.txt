@@ -1,4 +1,6 @@
 streamlit
-pandas
 google-search-results
+tldextract
+pandas
+seaborn
 serpapi
