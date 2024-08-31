@@ -4,3 +4,6 @@ tldextract
 pandas
 seaborn
 serpapi
+plotly
+numpy
+requests
