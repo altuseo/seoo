@@ -18,6 +18,7 @@ st.markdown("""
         padding: 3rem;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
     }
     .stButton>button {
         background-color: #4CAF50;
@@ -29,12 +30,14 @@ st.markdown("""
     }
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
+        color: #000000;
     }
-    h1 {
+    .stSelectbox>div>div>select {
+        background-color: #f9f9f9;
+        color: #000000;
+    }
+    h1, h2 {
         color: #2c3e50;
-    }
-    h2 {
-        color: #34495e;
     }
     .url-box {
         background-color: #f9f9f9;
@@ -49,21 +52,66 @@ st.markdown("""
         text-align: center;
         margin: 1rem 0;
     }
+    .serp-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: auto;
+    }
+    .serp-table th, .serp-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        color: #000000;
+    }
+    .serp-table th {
+        background-color: #383838;
+        color: #ffffff;
+        text-align: center;
+    }
+    .serp-similarity {
+        font-weight: bold;
+        font-size: 20px;
+        margin: 20px 0;
+        padding: 10px;
+        background-color: #383838;
+        color: #fff;
+        text-align: center;
+    }
+    .serp-similarity span {
+        color: #fff;
+    }
+    .exact-match {
+        background-color: #FFAAAA;
+        border: 2px solid #4EFF03;
+        display: inline-block;
+    }
+    .matched-line {
+        text-align: center;
+        font-weight: bold;
+    }
+    .stSidebar {
+        color: #ffffff;
+    }
+    .error {
+        color: #ff0000;
+        font-weight: bold;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# Functions (keep your existing functions here)
+# Functions
 def get_serp_comp(results):
-    # Your implementation for extracting URLs from SERP results
+    # Extract URLs from SERP results
     return [result['link'] for result in results.get('organic_results', [])]
 
-def compare_keywords(keyword1, keyword2, api_key):
+def compare_keywords(keyword1, keyword2, api_key, country, city, language, device):
     params = {
         "engine": "google",
         "q": keyword1,
-        "gl": "in",
-        "num": 20,
-        "api_key": api_key
+        "gl": country,
+        "hl": language,
+        "num": 10,
+        "api_key": api_key,
+        "device": device
     }
 
     # Perform search for the first keyword
@@ -135,13 +183,16 @@ def compare_keywords(keyword1, keyword2, api_key):
         .serp-table {{
             width: 100%;
             border-collapse: collapse;
+            margin: auto;
         }}
         .serp-table th, .serp-table td {{
             border: 1px solid #ddd;
             padding: 8px;
+            color: #000000;
         }}
         .serp-table th {{
             background-color: #383838;
+            color: #ffffff;
             text-align: center;
         }}
         .serp-similarity {{
@@ -176,51 +227,32 @@ def compare_keywords(keyword1, keyword2, api_key):
             table += f'<tr><td colspan="2" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
     table += '</table>'
 
-    return urls1, urls2, exact_matches, domain_color_map, color_map, similarity, table
+    return similarity, table
 
 def main():
     st.title("🔍 SERP Similarity Tool")
 
-    # Sidebar for API key input
+    # Sidebar for API key and configuration
     st.sidebar.header("Configuration")
-    api_key = st.sidebar.text_input("Enter your SerpAPI Key:", type="password")
+    api_key = st.sidebar.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.")
+    country = st.sidebar.selectbox("Select Country", options=[
+        "US", "CA", "GB", "AU", "IN", "SG", "JP", "FR", "DE", "IT", "ES", "BR", "MX", "ZA"
+    ], index=0)
+    city = st.sidebar.text_input("City (Optional)", help="Enter city for more precise results.")
+    language = st.sidebar.selectbox("Select Language", options=[
+        "en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"
+    ], index=0)
+    device = st.sidebar.selectbox("Select Device", options=["desktop", "mobile"], index=0)
 
-    # Main content
-    col1, col2 = st.columns(2)
-    with col1:
-        keyword1 = st.text_input("Enter the first keyword:")
-    with col2:
-        keyword2 = st.text_input("Enter the second keyword:")
+    keyword1 = st.text_input("Enter first keyword")
+    keyword2 = st.text_input("Enter second keyword")
 
-    if st.button("Compare Keywords"):
-        if not api_key:
-            st.error("Please enter your SerpAPI Key in the sidebar.")
-        elif not keyword1 or not keyword2:
-            st.warning("Please enter both keywords.")
+    if st.button("Check SERP Similarity"):
+        if not keyword1 or not keyword2:
+            st.markdown('<p class="error">Please enter both keywords.</p>', unsafe_allow_html=True)
         else:
-            with st.spinner("Analyzing SERP similarity..."):
-                urls1, urls2, exact_matches, domain_color_map, color_map, similarity, table = compare_keywords(keyword1, keyword2, api_key)
-
-            st.markdown(f"<div class='similarity-score'>SERP Similarity: {similarity}%</div>", unsafe_allow_html=True)
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                st.subheader(f"Results for '{keyword1}'")
-                for url in urls1:
-                    if url in exact_matches:
-                        st.markdown(f'<div class="url-box" style="background-color: {color_map.get(url, "#f9f9f9")};">{url}</div>', unsafe_allow_html=True)
-                    else:
-                        st.write(url)
-
-            with col2:
-                st.subheader(f"Results for '{keyword2}'")
-                for url in urls2:
-                    if url in exact_matches:
-                        st.markdown(f'<div class="url-box" style="background-color: {color_map.get(url, "#f9f9f9")};">{url}</div>', unsafe_allow_html=True)
-                    else:
-                        st.write(url)
-
+            # Run SERP comparison
+            similarity, table = compare_keywords(keyword1, keyword2, api_key, country, city, language, device)
             st.markdown(table, unsafe_allow_html=True)
 
 if __name__ == "__main__":
