@@ -3,6 +3,7 @@ import pandas as pd
 from serpapi import GoogleSearch
 from urllib.parse import urlparse
 import random
+import plotly.graph_objects as go
 
 # Set page config for a wider layout
 st.set_page_config(layout="wide", page_title="SERP Similarity Tool")
@@ -44,8 +45,9 @@ st.markdown("""
         background-color: #f9f9f9;
         color: #000000;
     }
-    h1, h2 {
+    h1 {
         color: #2c3e50;
+        text-align: center;
     }
     .url-box {
         background-color: #f9f9f9;
@@ -101,13 +103,31 @@ st.markdown("""
         color: #ff0000;
         font-weight: bold;
     }
+    .keyword-input {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .keyword-input > div {
+        width: 45%;
+    }
+    .check-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # Functions
 def get_serp_comp(results):
-    # Extract URLs from SERP results
-    return [result['link'] for result in results.get('organic_results', [])]
+    serp_comp = []
+    if "organic_results" in results:
+        num_results = min(len(results["organic_results"]), 10)
+        for x in results["organic_results"][:num_results]:
+            serp_comp.append(x["link"])
+    return serp_comp
 
 def compare_keywords(keyword1, keyword2, api_key, search_engine, language, device):
     params = {
@@ -176,7 +196,7 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
         if url2 in exact_matches:
             highlighted_urls2.append(f'<span style="background-color: {color_map[url2]}; color: black;">{url2}</span>')
         elif url2 in domain_color_map:
-            highlighted_urls2.append(f'<span style="background-color: {domain_color_map[url2]}; border: 2px solid darkred; color: black;">💀 {url2}</span>')
+            highlighted_urls2.append(f'<span style="background-color: {domain_color_map[url2]}; border: 2px solid darkred; color: black;">{url2} 💀</span>')
         else:
             highlighted_urls2.append(url2)
 
@@ -195,7 +215,33 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             table += f'<tr><td colspan="2" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
     table += '</table>'
 
-    return similarity, table
+    return similarity, table, urls1, urls2
+
+def create_position_chart(urls1, urls2, keyword1, keyword2):
+    common_urls = set(urls1) & set(urls2)
+    
+    fig = go.Figure()
+    
+    for url in common_urls:
+        pos1 = urls1.index(url) + 1
+        pos2 = urls2.index(url) + 1
+        fig.add_trace(go.Scatter(
+            x=[keyword1, keyword2],
+            y=[pos1, pos2],
+            mode='lines+markers',
+            name=url,
+            text=[f"Position: {pos1}", f"Position: {pos2}"],
+            hoverinfo='text+name'
+        ))
+    
+    fig.update_layout(
+        title='Position Changes for Common URLs',
+        xaxis_title='Keywords',
+        yaxis_title='SERP Position',
+        yaxis_autorange='reversed'
+    )
+    
+    return fig
 
 def main():
     st.title("🔍 SERP Similarity Tool")
@@ -230,16 +276,25 @@ def main():
     ], index=0)
     device = st.sidebar.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
 
-    keyword1 = st.text_input("Enter first keyword")
-    keyword2 = st.text_input("Enter second keyword")
+    # Keyword input
+    col1, col2 = st.columns(2)
+    with col1:
+        keyword1 = st.text_input("Enter first keyword")
+    with col2:
+        keyword2 = st.text_input("Enter second keyword")
 
-    if st.button("Check SERP Similarity"):
+    # Check SERP Similarity button
+    if st.button("Check SERP Similarity", key="check_similarity"):
         if not keyword1 or not keyword2:
             st.markdown('<p class="error">Please enter both keywords.</p>', unsafe_allow_html=True)
         else:
             # Run SERP comparison
-            similarity, table = compare_keywords(keyword1, keyword2, api_key, search_engines[search_engine], language, device)
+            similarity, table, urls1, urls2 = compare_keywords(keyword1, keyword2, api_key, search_engines[search_engine], language, device)
             st.markdown(table, unsafe_allow_html=True)
+
+            # Create and display position chart
+            fig = create_position_chart(urls1, urls2, keyword1, keyword2)
+            st.plotly_chart(fig, use_container_width=True)
 
 if __name__ == "__main__":
     main()
