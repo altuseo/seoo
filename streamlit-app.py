@@ -10,15 +10,20 @@ st.set_page_config(layout="wide", page_title="SERP Similarity Tool")
 # Custom CSS for a more professional look
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+    
     .reportview-container {
         background: #f0f2f6;
     }
     .main {
         background: #ffffff;
-        padding: 3rem;
+        padding: 2rem;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-align: center;
     }
     .stButton>button {
         background-color: #4CAF50;
@@ -27,6 +32,9 @@ st.markdown("""
         padding: 0.5rem 1rem;
         border-radius: 5px;
         border: none;
+    }
+    .stButton>button:hover {
+        color: black !important;
     }
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
@@ -61,6 +69,7 @@ st.markdown("""
         border: 1px solid #ddd;
         padding: 8px;
         color: #000000;
+        text-align: left;
     }
     .serp-table th {
         background-color: #383838;
@@ -100,15 +109,15 @@ def get_serp_comp(results):
     # Extract URLs from SERP results
     return [result['link'] for result in results.get('organic_results', [])]
 
-def compare_keywords(keyword1, keyword2, api_key, country, city, language, device):
+def compare_keywords(keyword1, keyword2, api_key, search_engine, language, device):
     params = {
         "engine": "google",
         "q": keyword1,
-        "gl": country,
+        "gl": search_engine.split('.')[-1],
         "hl": language,
         "num": 10,
         "api_key": api_key,
-        "device": device
+        "device": device.lower()
     }
 
     # Perform search for the first keyword
@@ -194,14 +203,32 @@ def main():
     # Sidebar for API key and configuration
     st.sidebar.header("Configuration")
     api_key = st.sidebar.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.")
-    country = st.sidebar.selectbox("Select Country", options=[
-        "US", "CA", "GB", "AU", "IN", "SG", "JP", "FR", "DE", "IT", "ES", "BR", "MX", "ZA"
-    ], index=0)
-    city = st.sidebar.text_input("City (Optional)", help="Enter city for more precise results.")
+    
+    # Search engine selection
+    search_engines = {
+        "Google (United States)": "google.com",
+        "Google (India)": "google.co.in",
+        "Google (United Kingdom)": "google.co.uk",
+        "Google (Canada)": "google.ca",
+        "Google (Australia)": "google.com.au",
+        "Google (Germany)": "google.de",
+        "Google (France)": "google.fr",
+        "Google (Japan)": "google.co.jp",
+        "Google (Brazil)": "google.com.br",
+        "Google (Italy)": "google.it",
+        # Add more search engines as needed
+    }
+    search_engine = st.sidebar.selectbox(
+        "Select Search Engine",
+        options=list(search_engines.keys()),
+        format_func=lambda x: x,
+        key="search_engine"
+    )
+    
     language = st.sidebar.selectbox("Select Language", options=[
         "en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"
     ], index=0)
-    device = st.sidebar.selectbox("Select Device", options=["desktop", "mobile"], index=0)
+    device = st.sidebar.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
 
     keyword1 = st.text_input("Enter first keyword")
     keyword2 = st.text_input("Enter second keyword")
@@ -211,7 +238,7 @@ def main():
             st.markdown('<p class="error">Please enter both keywords.</p>', unsafe_allow_html=True)
         else:
             # Run SERP comparison
-            similarity, table = compare_keywords(keyword1, keyword2, api_key, country, city, language, device)
+            similarity, table = compare_keywords(keyword1, keyword2, api_key, search_engines[search_engine], language, device)
             st.markdown(table, unsafe_allow_html=True)
 
 if __name__ == "__main__":
