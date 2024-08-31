@@ -1,0 +1,6 @@
+streamlit
+google-search-results
+tldextract
+pandas
+seaborn
+serpapi
