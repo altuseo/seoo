@@ -29,11 +29,10 @@ st.markdown("""
         background-color: #4CAF50;
         color: white;
         font-weight: bold;
-        padding: 10 px;
-        margin: 10 px;
+        padding: 0.5rem 1rem;
         border-radius: 5px;
         border: none;
-        width: 100%;
+        width: 200px;
     }
     .stButton>button:hover {
         color: black !important;
@@ -139,11 +138,6 @@ st.markdown("""
     }
     .stats-item strong {
         font-size: 18px;
-    }
-
-    /* Make the sidebar navigation button visible */
-    .css-1l02zno {
-        visibility: visible;
     }
 </style>
 """, unsafe_allow_html=True)
