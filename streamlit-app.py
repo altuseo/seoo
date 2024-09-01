@@ -169,7 +169,6 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
         "engine": "google",
         "q": keyword1,
         "gl": search_engine.split('.')[-1],
-        "hl": language,
         "num": 20,  # Request more results to ensure we get at least 10
         "api_key": api_key,
         "device": device.lower()
@@ -289,9 +288,6 @@ def main():
         key="search_engine"
     )
     
-    language = st.sidebar.selectbox("Select Language", options=[
-        "en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"
-    ], index=0)
     device = st.sidebar.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
 
     # Keyword input
