@@ -44,7 +44,6 @@ st.markdown("""
         cursor: text;
         width: 100%;
         padding: 10px;
-        margin: 10px;
     }
     .stSelectbox>div>div>select {
         background-color: #f9f9f9;
