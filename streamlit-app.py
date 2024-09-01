@@ -40,7 +40,7 @@ st.markdown("""
     }
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
-        color: #000000;
+        color: #000000 !important;
         cursor: text;
         width: 100%;
         padding: 10px;
