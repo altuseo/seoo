@@ -143,7 +143,7 @@ st.markdown("""
     .stats-item strong {
         font-size: 18px;
     }
-    input::placeholder {
+    .input::placeholder {
     color: black !important;
     opacity: 1; /* Ensures the placeholder color is fully opaque */
 }
