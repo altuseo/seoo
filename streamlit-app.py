@@ -33,8 +33,6 @@ st.markdown("""
         border-radius: 5px;
         border: none;
         width: 200px;
-        margin: auto;
-        display: block;
     }
     .stButton>button:hover {
         color: black !important;
@@ -42,7 +40,6 @@ st.markdown("""
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
         color: #000000;
-        cursor: text;
     }
     .stSelectbox>div>div>select {
         background-color: #f9f9f9;
@@ -108,24 +105,42 @@ st.markdown("""
     }
     .keyword-input {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .keyword-input > div {
+        width: 45%;
+    }
+    .check-button {
+        display: flex;
         justify-content: center;
+        margin-top: 1rem;
     }
-    .sidebar .sidebar-content {
-        background-image: url('https://your-image-url.com');
-        background-size: cover;
+    .stats-box {
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        border-radius: 10px;
+        padding: 20px;
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    @media only screen and (max-width: 600px) {
-        .main {
-            padding: 1rem;
-        }
-        .stButton>button {
-            width: 100%;
-        }
+    .stats-box h3 {
+        margin-bottom: 15px;
+        font-size: 24px;
+    }
+    .stats-item {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .stats-item strong {
+        font-size: 18px;
     }
 </style>
 """, unsafe_allow_html=True)
-
-# Rest of the code...
 
 # Functions
 def get_serp_comp(results):
