@@ -7,7 +7,7 @@ import random
 # Set page config for a wider layout
 st.set_page_config(layout="wide", page_title="SERP Similarity Tool")
 
-# Custom CSS for a more professional look
+# Custom CSS for a more professional look and improved mobile responsiveness
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -40,10 +40,16 @@ st.markdown("""
     }
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
-        color: #000000;
+        color: #000000;  /* Black text color */
         cursor: text;
         width: 100%;
         padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+    }
+    .stTextInput>div>div>input:focus {
+        border-color: #4CAF50; /* Green border when focused */
     }
     .stSelectbox>div>div>select {
         background-color: #f9f9f9;
@@ -109,12 +115,12 @@ st.markdown("""
     }
     .keyword-input {
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: center;
         margin-bottom: 1rem;
     }
     .keyword-input > div {
-        width: 45%;
+        margin-bottom: 10px;
     }
     .check-button {
         display: flex;
@@ -143,13 +149,29 @@ st.markdown("""
     .stats-item strong {
         font-size: 18px;
     }
-    }
     @media only screen and (max-width: 600px) {
         .main {
             padding: 1rem;
         }
         .stButton>button {
             width: 100%;
+        }
+        .serp-table th, .serp-table td {
+            padding: 5px;
+            font-size: 14px;
+        }
+        .serp-similarity {
+            font-size: 16px;
+            padding: 5px;
+        }
+        .stats-box {
+            padding: 10px;
+        }
+        .stats-box h3 {
+            font-size: 20px;
+        }
+        .stats-item strong {
+            font-size: 16px;
         }
     }
 </style>
@@ -236,81 +258,43 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             highlighted_urls2.append(url2)
 
     # Calculate similarity percentage
-    similarity = round(100 * len(exact_matches) / len(urls1), 2) if urls1 else 0
+    similarity = round(100 * len(exact_matches) / max(len(urls1), len(urls2)), 2)
 
-    # Create a table to display URLs with enhanced UI
-    table = f'''
-    <div class="serp-similarity">SERP Similarity: <span>{similarity}%</span></div>
-    <div class="stats-box">
-        <h3>SERP Comparison Statistics</h3>
-        <div class="stats-item">
-            <strong>Exact Common URLs:</strong> {len(exact_matches)}
-        </div>
-        <div class="stats-item">
-            <strong>Same Website, Different Pages:</strong> {sum(len(urls) for urls in common_domains.values()) // 2}
-        </div>
-    </div>
-    <table class="serp-table">
-        <tr><th>{keyword1}</th><th>{keyword2}</th></tr>
-    '''
-    for url1, url2 in zip(highlighted_urls1, highlighted_urls2):
-        table += f'<tr><td>{url1}</td><td>{url2}</td></tr>'
-        if url1 in exact_matches and url2 in exact_matches:
-            table += f'<tr><td colspan="2" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
-    table += '</table>'
+    # Return the results
+    return highlighted_urls1, highlighted_urls2, similarity
 
-    return similarity, table
+# Header
+st.title("SERP Similarity Checker")
 
-def main():
-    st.title("🔍 SERP Similarity Tool")
+# Inputs for keyword 1 and keyword 2
+col1, col2 = st.columns(2)
 
-    # Sidebar for API key and configuration
-    st.sidebar.header("Configuration")
-    api_key = st.sidebar.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.")
-    
-    # Search engine selection
-    search_engines = {
-        "Google (United States)": "google.com",
-        "Google (India)": "google.co.in",
-        "Google (United Kingdom)": "google.co.uk",
-        "Google (Canada)": "google.ca",
-        "Google (Australia)": "google.com.au",
-        "Google (Germany)": "google.de",
-        "Google (France)": "google.fr",
-        "Google (Japan)": "google.co.jp",
-        "Google (Brazil)": "google.com.br",
-        "Google (Italy)": "google.it",
-        # Add more search engines as needed
-    }
-    search_engine = st.sidebar.selectbox(
-        "Select Search Engine",
-        options=list(search_engines.keys()),
-        format_func=lambda x: x,
-        key="search_engine"
-    )
-    
-    language = st.sidebar.selectbox("Select Language", options=[
-        "en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"
-    ], index=0)
-    device = st.sidebar.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
+with col1:
+    keyword1 = st.text_input("Enter first keyword")
+with col2:
+    keyword2 = st.text_input("Enter second keyword")
 
-    # Keyword input
-    col1, col2 = st.columns(2)
-    with col1:
-        keyword1 = st.text_input("Enter first keyword")
-    with col2:
-        keyword2 = st.text_input("Enter second keyword")
+api_key = st.text_input("Enter your SerpAPI key", type="password")
+search_engine = st.selectbox("Select the Google search engine", options=["google.com", "google.co.uk", "google.ca", "google.com.au", "google.in"])
+language = st.selectbox("Select the search language", options=["en", "fr", "es", "de", "it", "pt", "ru", "zh"])
+device = st.selectbox("Select the device type", options=["Desktop", "Mobile"])
 
-    # Check SERP Similarity button
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        if st.button("Check SERP Similarity", key="check_similarity"):
-            if not keyword1 or not keyword2:
-                st.markdown('<p class="error">Please enter both keywords.</p>', unsafe_allow_html=True)
-            else:
-                # Run SERP comparison
-                similarity, table = compare_keywords(keyword1, keyword2, api_key, search_engines[search_engine], language, device)
-                st.markdown(table, unsafe_allow_html=True)
+# Button to start comparison
+if st.button("Check Similarity"):
+    if keyword1 and keyword2 and api_key:
+        urls1, urls2, similarity = compare_keywords(keyword1, keyword2, api_key, search_engine, language, device)
 
-if __name__ == "__main__":
-    main()
+        # Display similarity score
+        st.markdown(f"<div class='serp-similarity'>SERP Similarity: <span>{similarity}%</span></div>", unsafe_allow_html=True)
+
+        # Display URLs for keyword 1
+        st.markdown("<h2>Top SERP for First Keyword</h2>", unsafe_allow_html=True)
+        for url in urls1:
+            st.markdown(f'<div class="url-box">{url}</div>', unsafe_allow_html=True)
+
+        # Display URLs for keyword 2
+        st.markdown("<h2>Top SERP for Second Keyword</h2>", unsafe_allow_html=True)
+        for url in urls2:
+            st.markdown(f'<div class="url-box">{url}</div>', unsafe_allow_html=True)
+    else:
+        st.error("Please enter both keywords and your SerpAPI key!")
