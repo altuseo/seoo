@@ -40,7 +40,7 @@ st.markdown("""
     }
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
-        color: black;
+        color: #000000;
     }
     .stSelectbox>div>div>select {
         background-color: #f9f9f9;
