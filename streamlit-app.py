@@ -29,10 +29,11 @@ st.markdown("""
         background-color: #4CAF50;
         color: white;
         font-weight: bold;
-        padding: 0.5rem 1rem;
+        padding: 10px;
+        margin: 10px;
         border-radius: 5px;
         border: none;
-        width: 200px;
+        width: 100%;
     }
     .stButton>button:hover {
         color: black !important;
@@ -40,6 +41,10 @@ st.markdown("""
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
         color: #000000;
+        cursor: text;
+        width: 100%;
+        padding: 10px;
+        margin: 10px;
     }
     .stSelectbox>div>div>select {
         background-color: #f9f9f9;
@@ -138,6 +143,15 @@ st.markdown("""
     }
     .stats-item strong {
         font-size: 18px;
+    }
+    }
+    @media only screen and (max-width: 600px) {
+        .main {
+            padding: 1rem;
+        }
+        .stButton>button {
+            width: 100%;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
