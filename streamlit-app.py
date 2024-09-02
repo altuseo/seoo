@@ -7,7 +7,7 @@ import random
 # Set page config for a wider layout
 st.set_page_config(layout="wide", page_title="SERP Similarity Tool")
 
-# Custom CSS for a more professional look
+# Custom CSS for a more professional look and usability enhancements
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -15,10 +15,11 @@ st.markdown("""
     * {
         font-family: 'Poppins', sans-serif;
     }
-    
+
     .reportview-container {
         background: #ffffff;
     }
+
     .main {
         background: #ffffff;
         padding: 2rem;
@@ -27,19 +28,22 @@ st.markdown("""
         max-width: 1200px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
     .stButton>button {
         background-color: #4CAF50;
         color: white;
         font-weight: bold;
         padding: 10px;
-        margin: 10px;
+        margin: 5px 0;  /* Reduced margin for less gap */
         border-radius: 5px;
         border: none;
         width: 100%;
     }
+
     .stButton>button:hover {
         color: black !important;
     }
+
     .stTextInput>div>div>input {
         background-color: #f9f9f9;
         color: #000000;
@@ -50,9 +54,11 @@ st.markdown("""
         border-radius: 5px;
         transition: border-color 0.2s;
     }
+
     .stTextInput>div>div>input:focus {
         border-color: #4CAF50;
     }
+
     .stSelectbox>div>div>select {
         background-color: #f9f9f9;
         color: #000000;
@@ -61,17 +67,27 @@ st.markdown("""
         border-radius: 5px;
         border: 1px solid #ddd;
     }
-    h1 {
+
+    h1, h2, h3, h4, h5, h6 {
         color: #2c3e50;
         text-align: center;
         margin-bottom: 1rem;
     }
+
+    .subheader {
+        color: #000000;  /* Ensuring black text for headers */
+        text-align: center;
+        font-size: 1.25rem;
+        margin: 1rem 0;
+    }
+
     .url-box {
         background-color: #f9f9f9;
         padding: 0.5rem;
         border-radius: 5px;
         margin-bottom: 0.5rem;
     }
+
     .similarity-score {
         font-size: 2rem;
         font-weight: bold;
@@ -79,24 +95,30 @@ st.markdown("""
         text-align: center;
         margin: 1rem 0;
     }
+
     .serp-table {
         width: 100%;
         border-collapse: collapse;
         margin: auto;
         overflow-x: auto;
         display: block;
+        max-height: 400px;  /* Limiting height for scroll */
+        overflow-y: auto;  /* Vertical scroll */
     }
+
     .serp-table th, .serp-table td {
         border: 1px solid #ddd;
         padding: 8px;
         color: #000000;
         text-align: left;
     }
+
     .serp-table th {
         background-color: #383838;
         color: #ffffff;
         text-align: center;
     }
+
     .serp-similarity {
         font-weight: bold;
         font-size: 20px;
@@ -106,23 +128,28 @@ st.markdown("""
         color: #fff;
         text-align: center;
     }
+
     .serp-similarity span {
         color: #fff;
     }
+
     .exact-match {
         background-color: #FFAAAA;
         border: 2px solid #4EFF03;
         display: inline-block;
     }
+
     .matched-line {
         text-align: center;
         font-weight: bold;
     }
+
     .error {
         color: #ff0000;
         font-weight: bold;
         text-align: center;
     }
+
     .keyword-input {
         display: flex;
         flex-direction: column;
@@ -130,16 +157,19 @@ st.markdown("""
         align-items: center;
         margin-bottom: 1rem;
     }
+
     .keyword-input > div {
         width: 100%;
         max-width: 500px;
         margin: 10px 0;
     }
+
     .check-button {
         display: flex;
         justify-content: center;
-        margin-top: 1rem;
+        margin-top: 0.5rem;  /* Reduced margin for less gap */
     }
+
     .stats-box {
         background: linear-gradient(45deg, #3498db, #2ecc71);
         border-radius: 10px;
@@ -152,38 +182,47 @@ st.markdown("""
         max-width: 600px;
         margin: auto;
     }
+
     .stats-box h3 {
         margin-bottom: 15px;
         font-size: 24px;
     }
+
     .stats-item {
         background: rgba(255, 255, 255, 0.2);
         border-radius: 5px;
         padding: 10px;
         margin-bottom: 10px;
     }
+
     .stats-item strong {
         font-size: 18px;
     }
+
     @media only screen and (max-width: 600px) {
         .main {
             padding: 1rem;
         }
+
         .stButton>button {
             width: 100%;
         }
+
         .keyword-input {
             flex-direction: column;
             align-items: center;
         }
+
         .keyword-input > div {
             width: 100%;
             margin: 5px 0;
         }
+
         .stats-box {
             width: 100%;
             padding: 10px;
         }
+
         .serp-table {
             overflow-x: auto;
             display: block;
@@ -303,10 +342,11 @@ def main():
     st.title("🔍 SERP Similarity Tool")
 
     # Configuration section on the main page
-    st.header("Configuration")
+    st.markdown('<div class="subheader">Configuration</div>', unsafe_allow_html=True)
     api_key = st.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.")
     
     # Search engine selection
+    st.markdown('<div class="subheader">Select Search Engine</div>', unsafe_allow_html=True)
     search_engines = {
         "Google (United States)": "google.com",
         "Google (India)": "google.co.in",
@@ -318,21 +358,23 @@ def main():
         "Google (Japan)": "google.co.jp",
         "Google (Brazil)": "google.com.br",
         "Google (Italy)": "google.it",
-        # Add more search engines as needed
     }
     search_engine = st.selectbox(
         "Select Search Engine",
         options=list(search_engines.keys()),
         format_func=lambda x: x
     )
-    
+
+    st.markdown('<div class="subheader">Select Language</div>', unsafe_allow_html=True)
     language = st.selectbox("Select Language", options=[
         "en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"
     ], index=0)
+    
+    st.markdown('<div class="subheader">Select Device</div>', unsafe_allow_html=True)
     device = st.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
 
     # Keyword input
-    st.subheader("Enter Keywords")
+    st.markdown('<div class="subheader">Enter Keywords</div>', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
         keyword1 = st.text_input("Enter first keyword", key="keyword1")
@@ -340,7 +382,7 @@ def main():
         keyword2 = st.text_input("Enter second keyword", key="keyword2")
 
     # Check SERP Similarity button
-    st.subheader("Check SERP Similarity")
+    st.markdown('<div class="check-button"></div>', unsafe_allow_html=True)
     if st.button("Check SERP Similarity", key="check_similarity"):
         if not keyword1 or not keyword2:
             st.markdown('<p class="error">Please enter both keywords.</p>', unsafe_allow_html=True)
