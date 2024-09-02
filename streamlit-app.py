@@ -100,11 +100,11 @@ st.markdown("""
 
     .serp-table-container {
         width: 100%;
-        display: flex;
+        overflow-x: auto;  /* Enables horizontal scroll for tables */
+        display: block;
         justify-content: center;
         margin-bottom: 1rem;
         padding: 1rem;  /* Added padding for better spacing */
-        overflow-x: auto; /* Enables horizontal scroll for smaller screens */
     }
 
     .serp-table {
@@ -113,7 +113,6 @@ st.markdown("""
         margin: auto;
         border: 2px solid #ddd; /* Improved border visibility */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for attractiveness */
-        position: relative;
     }
 
     .serp-table th, .serp-table td {
@@ -121,7 +120,6 @@ st.markdown("""
         padding: 8px; /* Consistent padding for better spacing */
         color: #000000;
         text-align: left;
-        transition: background-color 0.3s ease; /* Transition for hover effect */
     }
 
     .serp-table th {
@@ -219,36 +217,6 @@ st.markdown("""
         background-color: #f0f0f0;
         padding: 10px;
         border-right: 1px solid #ddd;
-    }
-
-    /* Hover effect for highlighting matching URLs */
-    .highlighted:hover {
-        background-color: #d1ecf1;
-        cursor: pointer;
-    }
-
-    /* Line between matching URLs */
-    .line {
-        position: absolute;
-        width: 40%;
-        height: 2px;
-        background-color: #4CAF50;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: none;
-    }
-
-    /* Show line on hover */
-    .highlighted:hover + .line {
-        display: block;
-    }
-
-    /* Matched URL Highlight */
-    .matched-highlight {
-        background-color: #d1ecf1;
-        font-weight: bold;
-        text-align: center;
     }
 
     @media only screen and (max-width: 600px) {
@@ -349,26 +317,21 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     # Highlight URLs
     highlighted_urls1 = []
     highlighted_urls2 = []
-    lines_html = ""  # To store lines for matching URLs
     for url1 in urls1:
         if url1 in exact_matches:
-            highlighted_urls1.append(f'<span class="highlighted matched-highlight" style="background-color: {color_map[url1]}; color: black;" data-url="{url1}">{url1}</span>')
+            highlighted_urls1.append(f'<span style="background-color: {color_map[url1]}; color: black;">{url1}</span>')
         elif url1 in domain_color_map:
-            highlighted_urls1.append(f'<span style="background-color: {domain_color_map[url1]}; border: 2px solid darkred; color: black;" class="highlighted">{url1} 💀</span>')
+            highlighted_urls1.append(f'<span style="background-color: {domain_color_map[url1]}; border: 2px solid darkred; color: black;">{url1} 💀</span>')
         else:
-            highlighted_urls1.append(f'<span class="highlighted">{url1}</span>')
+            highlighted_urls1.append(url1)
 
     for url2 in urls2:
         if url2 in exact_matches:
-            highlighted_urls2.append(f'<span class="highlighted matched-highlight" style="background-color: {color_map[url2]}; color: black;" data-url="{url2}">{url2}</span>')
+            highlighted_urls2.append(f'<span style="background-color: {color_map[url2]}; color: black;">{url2}</span>')
         elif url2 in domain_color_map:
-            highlighted_urls2.append(f'<span style="background-color: {domain_color_map[url2]}; border: 2px solid darkred; color: black;" class="highlighted">{url2} 💀</span>')
+            highlighted_urls2.append(f'<span style="background-color: {domain_color_map[url2]}; border: 2px solid darkred; color: black;">{url2} 💀</span>')
         else:
-            highlighted_urls2.append(f'<span class="highlighted">{url2}</span>')
-
-    # Create hover effect lines
-    for i, url in enumerate(exact_matches):
-        lines_html += f'<div class="line" style="top: {i*40 + 40}px;"></div>'
+            highlighted_urls2.append(url2)
 
     # Calculate similarity percentage
     similarity = round(100 * len(exact_matches) / len(urls1), 2) if urls1 else 0
@@ -392,8 +355,8 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     for index, (url1, url2) in enumerate(zip(highlighted_urls1, highlighted_urls2), start=1):
         table += f'<tr><td class="numbering">{index}</td><td>{url1}</td><td>{url2}</td></tr>'
         if url1 in exact_matches and url2 in exact_matches:
-            table += f'<tr><td colspan="3" class="matched-line" style="background-color: {color_map[url1]};">&#x2194; Match the following lines</td></tr>'
-    table += f'</table>{lines_html}</div>'
+            table += f'<tr><td colspan="3" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
+    table += '</table></div>'
 
     return similarity, table
 
