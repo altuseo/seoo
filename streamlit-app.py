@@ -27,6 +27,8 @@ st.markdown("""
         border-radius: 10px;
         max-width: 1200px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow-y: auto; /* Enables vertical scroll for the whole page */
+        max-height: 90vh; /* Sets maximum height to 90% of viewport */
     }
 
     .stButton>button {
@@ -55,6 +57,10 @@ st.markdown("""
         transition: border-color 0.2s;
     }
 
+    .stTextInput>div>div>label {
+        color: #000000;  /* Ensuring black text for labels */
+    }
+
     .stTextInput>div>div>input:focus {
         border-color: #4CAF50;
     }
@@ -66,6 +72,10 @@ st.markdown("""
         padding: 10px;
         border-radius: 5px;
         border: 1px solid #ddd;
+    }
+
+    .stSelectbox>div>div>label {
+        color: #000000;  /* Ensuring black text for labels */
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -202,6 +212,7 @@ st.markdown("""
     @media only screen and (max-width: 600px) {
         .main {
             padding: 1rem;
+            max-height: 80vh; /* Adjusted for smaller screens */
         }
 
         .stButton>button {
@@ -343,7 +354,7 @@ def main():
 
     # Configuration section on the main page
     st.markdown('<div class="subheader">Configuration</div>', unsafe_allow_html=True)
-    api_key = st.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.")
+    api_key = st.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.", key="api_key_input")
     
     # Search engine selection
     st.markdown('<div class="subheader">Select Search Engine</div>', unsafe_allow_html=True)
