@@ -22,7 +22,7 @@ st.markdown("""
 
     .main {
         background: #ffffff;
-        padding: 2rem;
+        padding: 1rem;
         margin: auto;
         border-radius: 10px;
         max-width: 1200px;
@@ -46,49 +46,37 @@ st.markdown("""
         color: black !important;
     }
 
-    .stTextInput>div>div>input {
+    .stTextInput>div>div>input, .stSelectbox>div>div>select {
         background-color: #f9f9f9;
-        color: #000000;
-        cursor: text;
+        color: #000000;  /* Ensuring black text */
         width: 100%;
         padding: 10px;
-        border: 1px solid #ddd;
         border-radius: 5px;
-        transition: border-color 0.2s;
+        border: 1px solid #ddd;
+        margin: 0;
     }
 
-    .stTextInput>div>div>label {
+    .stTextInput>div>div>label, .stSelectbox>div>div>label {
         color: #000000;  /* Ensuring black text for labels */
+        margin-bottom: 0.5rem;
+        display: block;
     }
 
-    .stTextInput>div>div>input:focus {
+    .stTextInput>div>div>input:focus, .stSelectbox>div>div>select:focus {
         border-color: #4CAF50;
-    }
-
-    .stSelectbox>div>div>select {
-        background-color: #f9f9f9;
-        color: #000000;
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-    }
-
-    .stSelectbox>div>div>label {
-        color: #000000;  /* Ensuring black text for labels */
     }
 
     h1, h2, h3, h4, h5, h6 {
         color: #2c3e50;
         text-align: center;
-        margin-bottom: 1rem;
+        margin: 0.5rem 0;  /* Reduced margin for headings */
     }
 
     .subheader {
         color: #000000;  /* Ensuring black text for headers */
         text-align: center;
         font-size: 1.25rem;
-        margin: 1rem 0;
+        margin: 0.5rem 0;
     }
 
     .url-box {
@@ -99,21 +87,25 @@ st.markdown("""
     }
 
     .similarity-score {
-        font-size: 2rem;
+        font-size: 1.5rem; /* Adjusted font size for better layout */
         font-weight: bold;
         color: #2980b9;
         text-align: center;
-        margin: 1rem 0;
+        margin: 0.5rem 0;
+    }
+
+    .serp-table-container {
+        width: 100%;
+        overflow-x: auto;  /* Enables horizontal scroll for tables */
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
     }
 
     .serp-table {
-        width: 100%;
+        width: auto; /* Automatic width to fit content */
         border-collapse: collapse;
         margin: auto;
-        overflow-x: auto;
-        display: block;
-        max-height: 400px;  /* Limiting height for scroll */
-        overflow-y: auto;  /* Vertical scroll */
     }
 
     .serp-table th, .serp-table td {
@@ -131,8 +123,8 @@ st.markdown("""
 
     .serp-similarity {
         font-weight: bold;
-        font-size: 20px;
-        margin: 20px 0;
+        font-size: 18px; /* Adjusted font size */
+        margin: 10px 0; /* Reduced margin for less gap */
         padding: 10px;
         background-color: #383838;
         color: #fff;
@@ -186,7 +178,7 @@ st.markdown("""
         padding: 20px;
         color: white;
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px; /* Reduced margin for less gap */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         width: 100%;
         max-width: 600px;
@@ -194,29 +186,25 @@ st.markdown("""
     }
 
     .stats-box h3 {
-        margin-bottom: 15px;
-        font-size: 24px;
+        margin-bottom: 10px; /* Reduced margin */
+        font-size: 20px; /* Adjusted font size */
     }
 
     .stats-item {
         background: rgba(255, 255, 255, 0.2);
         border-radius: 5px;
         padding: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 5px; /* Reduced margin */
     }
 
     .stats-item strong {
-        font-size: 18px;
+        font-size: 16px; /* Adjusted font size */
     }
 
     @media only screen and (max-width: 600px) {
         .main {
             padding: 1rem;
             max-height: 80vh; /* Adjusted for smaller screens */
-        }
-
-        .stButton>button {
-            width: 100%;
         }
 
         .keyword-input {
@@ -229,15 +217,14 @@ st.markdown("""
             margin: 5px 0;
         }
 
+        .serp-table-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+
         .stats-box {
             width: 100%;
             padding: 10px;
-        }
-
-        .serp-table {
-            overflow-x: auto;
-            display: block;
-            width: 100%;
         }
     }
 </style>
@@ -338,53 +325,54 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             <strong>Same Website, Different Pages:</strong> {sum(len(urls) for urls in common_domains.values()) // 2}
         </div>
     </div>
-    <table class="serp-table">
-        <tr><th>{keyword1}</th><th>{keyword2}</th></tr>
+    <div class="serp-table-container">
+        <table class="serp-table">
+            <tr><th>{keyword1}</th><th>{keyword2}</th></tr>
     '''
     for url1, url2 in zip(highlighted_urls1, highlighted_urls2):
         table += f'<tr><td>{url1}</td><td>{url2}</td></tr>'
         if url1 in exact_matches and url2 in exact_matches:
             table += f'<tr><td colspan="2" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
-    table += '</table>'
+    table += '</table></div>'
 
     return similarity, table
 
 def main():
     st.title("🔍 SERP Similarity Tool")
 
-    # Configuration section on the main page
-    st.markdown('<div class="subheader">Configuration</div>', unsafe_allow_html=True)
-    api_key = st.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.", key="api_key_input")
-    
-    # Search engine selection
-    st.markdown('<div class="subheader">Select Search Engine</div>', unsafe_allow_html=True)
-    search_engines = {
-        "Google (United States)": "google.com",
-        "Google (India)": "google.co.in",
-        "Google (United Kingdom)": "google.co.uk",
-        "Google (Canada)": "google.ca",
-        "Google (Australia)": "google.com.au",
-        "Google (Germany)": "google.de",
-        "Google (France)": "google.fr",
-        "Google (Japan)": "google.co.jp",
-        "Google (Brazil)": "google.com.br",
-        "Google (Italy)": "google.it",
-    }
-    search_engine = st.selectbox(
-        "Select Search Engine",
-        options=list(search_engines.keys()),
-        format_func=lambda x: x
-    )
+    # Row 1: SERP API Key and Search Engine
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown('<div class="subheader">Enter your SerpAPI Key</div>', unsafe_allow_html=True)
+        api_key = st.text_input("", type="password", help="Your SerpAPI key for fetching search results.", key="api_key_input")
+    with col2:
+        st.markdown('<div class="subheader">Select Search Engine</div>', unsafe_allow_html=True)
+        search_engines = {
+            "Google (United States)": "google.com",
+            "Google (India)": "google.co.in",
+            "Google (United Kingdom)": "google.co.uk",
+            "Google (Canada)": "google.ca",
+            "Google (Australia)": "google.com.au",
+            "Google (Germany)": "google.de",
+            "Google (France)": "google.fr",
+            "Google (Japan)": "google.co.jp",
+            "Google (Brazil)": "google.com.br",
+            "Google (Italy)": "google.it",
+        }
+        search_engine = st.selectbox(
+            "", options=list(search_engines.keys()), format_func=lambda x: x
+        )
 
-    st.markdown('<div class="subheader">Select Language</div>', unsafe_allow_html=True)
-    language = st.selectbox("Select Language", options=[
-        "en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"
-    ], index=0)
-    
-    st.markdown('<div class="subheader">Select Device</div>', unsafe_allow_html=True)
-    device = st.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
+    # Row 2: Language and Device
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown('<div class="subheader">Select Language</div>', unsafe_allow_html=True)
+        language = st.selectbox("", options=["en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"], index=0)
+    with col2:
+        st.markdown('<div class="subheader">Select Device</div>', unsafe_allow_html=True)
+        device = st.selectbox("", options=["Desktop", "Mobile", "Tablet"], index=0)
 
-    # Keyword input
+    # Row 3: Keywords
     st.markdown('<div class="subheader">Enter Keywords</div>', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
