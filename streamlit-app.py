@@ -11,7 +11,7 @@ st.set_page_config(layout="wide", page_title="SERP Similarity Tool")
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    
+
     * {
         font-family: 'Poppins', sans-serif;
     }
@@ -101,160 +101,62 @@ st.markdown("""
     .serp-table-container {
         width: 100%;
         display: flex;
-        justify-content: center;
+        justify-content: space-between; /* Spread columns across container */
         margin-bottom: 1rem;
         padding: 1rem;  /* Added padding for better spacing */
-        overflow-x: auto; /* Enables horizontal scroll for smaller screens */
+        position: relative; /* Position relative for line drawing */
     }
 
-    .serp-table {
-        width: 100%; /* Fixed width to fill container */
-        border-collapse: collapse;
-        margin: auto;
-        border: 2px solid #ddd; /* Improved border visibility */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for attractiveness */
-        position: relative;
+    .serp-column {
+        width: 45%;
     }
 
-    .serp-table th, .serp-table td {
-       border: 1px solid #ddd;
-    padding: 8px; /* Consistent padding for better spacing */
-    color: #000000;
-    text-align: left;
-    font-size: 12px; /* Decrease font size to fit longer URLs */
-    overflow-wrap: break-word; /* Ensures long words (like URLs) wrap within the cell */
-    max-width: 200px; /* Optional: Set a maximum width for each cell to limit the length */
-    white-space: normal; /* Ensures text wraps normally */
-    transition: background-color 0.3s ease; /* Transition for hover effect */
-    }
-
-    .serp-table th {
-        background-color: #383838;
-        color: #ffffff;
-        text-align: center;
+    .serp-column-header {
+        font-size: 1.2rem;
         font-weight: bold;
-    }
-
-    .serp-similarity {
-        font-weight: bold;
-        font-size: 18px; /* Adjusted font size */
-        margin: 10px 0; /* Reduced margin for less gap */
-        padding: 10px;
-        background-color: #383838;
-        color: #fff;
-        text-align: center;
-    }
-
-    .serp-similarity span {
-        color: #fff;
-    }
-
-    .exact-match {
-        background-color: #FFAAAA;
-        border: 2px solid #4EFF03;
-        display: inline-block;
-    }
-
-    .matched-line {
-        text-align: center;
-        font-weight: bold;
-    }
-
-    .error {
-        color: #ff0000;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    .keyword-input {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         margin-bottom: 1rem;
+        color: #333;
     }
 
-    .keyword-input > div {
-        width: 100%;
-        max-width: 500px;
-        margin: 10px 0;
-    }
-
-    .check-button {
+    .serp-row {
         display: flex;
-        justify-content: center;
-        margin-top: 0.3rem;  /* Reduced margin for less gap */
-    }
-
-    .stats-box {
-        background: linear-gradient(45deg, #3498db, #2ecc71);
-        border-radius: 10px;
-        padding: 20px;
-        color: white;
-        text-align: center;
-        margin-bottom: 20px; /* Added margin for spacing below stats box */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 600px;
-        margin: auto;
-    }
-
-    .stats-box h3 {
-        margin-bottom: 10px; /* Reduced margin */
-        font-size: 20px; /* Adjusted font size */
-        font-weight: bold;
-        color: #ffffff; /* White color for better contrast */
-    }
-
-    .stats-item {
-        background: rgba(255, 255, 255, 0.2);
+        align-items: center;
+        padding: 0.5rem;
+        background-color: #f9f9f9;
         border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 5px; /* Reduced margin */
+        margin-bottom: 0.5rem;
+        position: relative;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    .stats-item strong {
-        font-size: 16px; /* Adjusted font size */
+    .serp-row:hover {
+        background-color: #e0e0e0;
     }
 
-    .numbering {
-        text-align: center;
-    font-weight: bold;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-right: 1px solid #ddd;
-    width: 40px; /* Set a smaller width for the numbering column */
-    max-width: 40px; /* Ensure the width does not exceed this value */
+    .serp-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
     }
 
-    /* Hover effect for highlighting matching URLs */
-    .highlighted:hover {
-        background-color: #d1ecf1;
-        cursor: pointer;
+    .serp-number {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        font-weight: bold;
+        color: #333;
     }
 
-    /* Line between matching URLs */
     .line {
         position: absolute;
-        width: 40%;
-        height: 2px;
+        width: 1px;
         background-color: #4CAF50;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: none;
-    }
-
-    /* Show line on hover */
-    .highlighted:hover + .line {
-        display: block;
-    }
-
-    /* Matched URL Highlight */
-    .matched-highlight {
-        background-color: #d1ecf1;
-        font-weight: bold;
-        text-align: center;
+        z-index: 1;
     }
 
     .info-section {
@@ -294,18 +196,17 @@ st.markdown("""
         }
 
         .serp-table-container {
-            overflow-x: auto;
+            flex-direction: column;
+        }
+
+        .serp-column {
             width: 100%;
+            margin-bottom: 1rem;
         }
 
         .stats-box {
             width: 100%;
             padding: 10px;
-        }
-
-        .serp-table {
-            width: 100%; /* Ensuring the table stays within viewport */
-            table-layout: fixed; /* Ensures columns are sized based on available space */
         }
     }
 </style>
@@ -372,62 +273,51 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
         for url in common_domains[domain]:
             domain_color_map[url] = color
 
-    # Highlight URLs
-    highlighted_urls1 = []
-    highlighted_urls2 = []
-    lines_html = ""  # To store lines for matching URLs
-    for url1 in urls1:
+    # Generate HTML for both columns
+    column1_html = '<div class="serp-column"><div class="serp-column-header">' + keyword1 + '</div>'
+    column2_html = '<div class="serp-column"><div class="serp-column-header">' + keyword2 + '</div>'
+    lines_html = ""
+
+    for index, (url1, url2) in enumerate(zip(urls1, urls2), start=1):
+        icon1 = f'<div class="serp-icon">&#x1F517;</div>'
+        icon2 = f'<div class="serp-icon">&#x1F517;</div>'
+        number_html = f'<div class="serp-number">{index}</div>'
+
         if url1 in exact_matches:
-            highlighted_urls1.append(f'<span class="highlighted matched-highlight" style="background-color: {color_map[url1]}; color: black;" data-url="{url1}">{url1}</span>')
-        elif url1 in domain_color_map:
-            highlighted_urls1.append(f'<span style="background-color: {domain_color_map[url1]}; border: 2px solid darkred; color: black;" class="highlighted">{url1} 💀</span>')
+            column1_html += f'<div class="serp-row">{number_html}{icon1}<span style="background-color: {color_map[url1]}; color: black;">{url1}</span></div>'
         else:
-            highlighted_urls1.append(f'<span class="highlighted">{url1}</span>')
+            column1_html += f'<div class="serp-row">{number_html}{icon1}{url1}</div>'
 
-    for url2 in urls2:
         if url2 in exact_matches:
-            highlighted_urls2.append(f'<span class="highlighted matched-highlight" style="background-color: {color_map[url2]}; color: black;" data-url="{url2}">{url2}</span>')
-        elif url2 in domain_color_map:
-            highlighted_urls2.append(f'<span style="background-color: {domain_color_map[url2]}; border: 2px solid darkred; color: black;" class="highlighted">{url2} 💀</span>')
+            column2_html += f'<div class="serp-row">{number_html}{icon2}<span style="background-color: {color_map[url2]}; color: black;">{url2}</span></div>'
         else:
-            highlighted_urls2.append(f'<span class="highlighted">{url2}</span>')
+            column2_html += f'<div class="serp-row">{number_html}{icon2}{url2}</div>'
 
-    # Create hover effect lines
-    for i, url in enumerate(exact_matches):
-        lines_html += f'<div class="line" style="top: {i*40 + 40}px;"></div>'
-
-    # Calculate similarity percentage
-    similarity = round(100 * len(exact_matches) / len(urls1), 2) if urls1 else 0
-
-    # Create a table to display URLs with enhanced UI
-    table = f'''
-    <div class="serp-similarity">SERP Similarity: <span>{similarity}%</span></div>
-    <div class="stats-box">
-        <h3>SERP Comparison Statistics</h3>
-        <div class="stats-item">
-            <strong>Exact Common URLs:</strong> {len(exact_matches)}
-        </div>
-        <div class="stats-item">
-            <strong>Same Website, Different Pages:</strong> {sum(len(urls) for urls in common_domains.values()) // 2}
-        </div>
-    </div>
-    <div class="serp-table-container">
-        <table class="serp-table">
-            <tr><th class="numbering">#</th><th>{keyword1}</th><th>{keyword2}</th></tr>
-    '''
-    for index, (url1, url2) in enumerate(zip(highlighted_urls1, highlighted_urls2), start=1):
-        table += f'<tr><td class="numbering">{index}</td><td>{url1}</td><td>{url2}</td></tr>'
+        # Draw connecting lines for exact matches
         if url1 in exact_matches and url2 in exact_matches:
-            table += f'<tr><td colspan="3" class="matched-line" style="background-color: {color_map[url1]};">&#x2194; Match the following lines</td></tr>'
-    table += f'</table>{lines_html}</div>'
+            lines_html += f'<div class="line" style="top: {index * 50}px; left: 50%; height: 1px;"></div>'
+
+    column1_html += '</div>'
+    column2_html += '</div>'
+
+    # Final HTML output combining both columns and lines
+    table_html = f'''
+    <div class="serp-table-container">
+        {column1_html}
+        {column2_html}
+        {lines_html}
+    </div>
+    '''
 
     # Additional content section
     additional_content = """
     <div class="info-section">
         <h2>About the SERP Similarity Tool</h2>
-        <p><a href="https://www.linkedin.com/in/altamash-mapari-44502a1a2/">Altamash Mapari</a> built this tool with the help of ChatGPT & Claude for SEOs so that everyone can enjoy and easily check the SERP Similarity in one click. This free SERP tool allows you to analyze live SERP data, understand keyword SERP overlap, and gain valuable insights into your SEO performance.</p>
- <h2>What is SERP Similarity?</h2>
+        <p>Altamash Mapari built this tool for SEOs so that everyone can enjoy and easily check the SERP Similarity in one click. The <strong>SERP Similarity Tool</strong> is a powerful, free SERP analysis tool designed to help you compare keyword SERP results and optimize your content strategy. This free SERP tool allows you to analyze live SERP data, understand keyword SERP overlap, and gain valuable insights into your SEO performance.</p>
+        
+        <h2>What is SERP Similarity?</h2>
         <p><strong>SERP Similarity</strong> refers to the comparison of search engine results pages (SERPs) for different keywords to identify commonalities and differences. By using this tool, you can analyze how similar or different the SERPs are for two keywords, helping you understand your competition and optimize your SEO strategies.</p>
+        
         <h2>How to Use the SERP Similarity Tool</h2>
         <ul>
             <li><strong>Get Your SerpAPI Key</strong>: To use this free SERP check tool, you'll need a SerpAPI key. Sign up for a free account on <a href="https://serpapi.com/">SerpAPI</a>. After registering, you can find your API key in the dashboard.</li>
@@ -436,6 +326,7 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             <li><strong>Enter Keywords</strong>: Input the two keywords you want to compare in the "Enter first keyword" and "Enter second keyword" fields. This keyword SERP tool will fetch the results for both keywords.</li>
             <li><strong>Check SERP Similarity</strong>: Click on the "Check SERP Similarity" button to run a live SERP analysis. The tool will display a table showing the URLs ranking for both keywords, along with any exact matches.</li>
         </ul>
+        
         <h2>Understanding the Results</h2>
         <ul>
             <li><strong>Color Codes</strong>:
@@ -446,12 +337,12 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             </li>
             <li><strong>Emoji 💀</strong>: The skull emoji indicates URLs that are from the same domain but different pages, providing insights into how competitors dominate the SERP with multiple URLs.</li>
         </ul>
-       <p>This free SERP analysis tool is perfect for SEOs looking to gain quick insights into keyword competition and overlap. Start using this best free SERP tool today and gain valuable insights into your SEO strategy!</p>
-   <p>Made with ❤️</p>
+        
+        <p>This free SERP analysis tool is perfect for SEOs looking to gain quick insights into keyword competition and overlap. Start using this best free SERP tool today and gain valuable insights into your SEO strategy!</p>
     </div>
     """
 
-    return similarity, table + additional_content
+    return similarity, table_html + additional_content
 
 def main():
     st.title("🔍 SERP Similarity Tool")
