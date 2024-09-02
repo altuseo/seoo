@@ -100,17 +100,20 @@ st.markdown("""
         display: flex;
         justify-content: center;
         margin-bottom: 1rem;
+        padding: 1rem;  /* Added padding for better spacing */
     }
 
     .serp-table {
         width: auto; /* Automatic width to fit content */
         border-collapse: collapse;
         margin: auto;
+        border: 1px solid #ddd; /* Added border for the table */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for attractiveness */
     }
 
     .serp-table th, .serp-table td {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 10px; /* Increased padding for better spacing */
         color: #000000;
         text-align: left;
     }
@@ -119,6 +122,7 @@ st.markdown("""
         background-color: #383838;
         color: #ffffff;
         text-align: center;
+        font-weight: bold;
     }
 
     .serp-similarity {
@@ -178,7 +182,7 @@ st.markdown("""
         padding: 20px;
         color: white;
         text-align: center;
-        margin-bottom: 10px; /* Reduced margin for less gap */
+        margin-bottom: 20px; /* Added margin for spacing below stats box */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         width: 100%;
         max-width: 600px;
@@ -188,6 +192,8 @@ st.markdown("""
     .stats-box h3 {
         margin-bottom: 10px; /* Reduced margin */
         font-size: 20px; /* Adjusted font size */
+        font-weight: bold;
+        color: #ffffff; /* White color for better contrast */
     }
 
     .stats-item {
@@ -199,6 +205,14 @@ st.markdown("""
 
     .stats-item strong {
         font-size: 16px; /* Adjusted font size */
+    }
+
+    .numbering {
+        text-align: center;
+        font-weight: bold;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-right: 1px solid #ddd;
     }
 
     @media only screen and (max-width: 600px) {
@@ -327,12 +341,12 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     </div>
     <div class="serp-table-container">
         <table class="serp-table">
-            <tr><th>{keyword1}</th><th>{keyword2}</th></tr>
+            <tr><th class="numbering">#</th><th>{keyword1}</th><th>{keyword2}</th></tr>
     '''
-    for url1, url2 in zip(highlighted_urls1, highlighted_urls2):
-        table += f'<tr><td>{url1}</td><td>{url2}</td></tr>'
+    for index, (url1, url2) in enumerate(zip(highlighted_urls1, highlighted_urls2), start=1):
+        table += f'<tr><td class="numbering">{index}</td><td>{url1}</td><td>{url2}</td></tr>'
         if url1 in exact_matches and url2 in exact_matches:
-            table += f'<tr><td colspan="2" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
+            table += f'<tr><td colspan="3" style="text-align:center;"><span style="color:{color_map[url1]};">&#x2194; Matched URL</span></td></tr>'
     table += '</table></div>'
 
     return similarity, table
