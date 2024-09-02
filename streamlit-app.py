@@ -40,10 +40,12 @@ st.markdown("""
         border-radius: 5px;
         border: none;
         width: 100%;
+        transition: all 0.3s ease;
     }
 
     .stButton>button:hover {
-        color: black !important;
+        background-color: #45a049;
+        color: white !important;
     }
 
     .stTextInput>div>div>input, .stSelectbox>div>div>select {
@@ -241,6 +243,11 @@ st.markdown("""
         .stats-box {
             width: 100%;
             padding: 10px;
+        }
+
+        .serp-table {
+            width: 100%; /* Ensuring the table stays within viewport */
+            table-layout: fixed; /* Ensures columns are sized based on available space */
         }
     }
 </style>
