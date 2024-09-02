@@ -441,7 +441,7 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             <li><strong>Emoji 💀</strong>: The skull emoji indicates URLs that are from the same domain but different pages, providing insights into how competitors dominate the SERP with multiple URLs.</li>
         </ul>
        <p>This free SERP analysis tool is perfect for SEOs looking to gain quick insights into keyword competition and overlap. Start using this best free SERP tool today and gain valuable insights into your SEO strategy!</p>
-   <p>Designed with lots of love &
+   <p>Made with ❤️</p>
     </div>
     """
 
