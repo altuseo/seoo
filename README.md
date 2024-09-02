@@ -9,7 +9,7 @@ SERP Similarity refers to the comparison of search engine results pages (SERPs) 
 How to Use the SERP Similarity Tool
 
 Get Your SerpAPI Key:
-To use this free SERP check tool, you'll need a SerpAPI key. Sign up for a free account on [SerpAPI]([url](https://serpapi.com/)). After registering, you can find your API key in the dashboard.
+To use this free SERP check tool, you'll need a SerpAPI key. Sign up for a free account on [SerpAPI]([url](https://serpapi.com/)[/url]). After registering, you can find your API key in the dashboard.
 
 Enter Your API Key:
 Copy your SerpAPI key and paste it into the "Enter your SerpAPI Key" field in the tool.
