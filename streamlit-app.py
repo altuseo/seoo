@@ -54,29 +54,31 @@ st.markdown("""
         border-radius: 5px;
         border: 1px solid #ddd;
         margin: 0;
+        transition: all 0.2s ease-in-out;
     }
 
     .stTextInput>div>div>label, .stSelectbox>div>div>label {
         color: #000000;  /* Ensuring black text for labels */
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.3rem; /* Reduced margin for compactness */
         display: block;
     }
 
     .stTextInput>div>div>input:focus, .stSelectbox>div>div>select:focus {
         border-color: #4CAF50;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Added glow effect for focus */
     }
 
     h1, h2, h3, h4, h5, h6 {
         color: #2c3e50;
         text-align: center;
-        margin: 0.5rem 0;  /* Reduced margin for headings */
+        margin: 0.3rem 0;  /* Reduced margin for headings */
     }
 
     .subheader {
         color: #000000;  /* Ensuring black text for headers */
         text-align: center;
         font-size: 1.25rem;
-        margin: 0.5rem 0;
+        margin: 0.3rem 0;
     }
 
     .url-box {
@@ -97,23 +99,23 @@ st.markdown("""
     .serp-table-container {
         width: 100%;
         overflow-x: auto;  /* Enables horizontal scroll for tables */
-        display: flex;
+        display: block;
         justify-content: center;
         margin-bottom: 1rem;
         padding: 1rem;  /* Added padding for better spacing */
     }
 
     .serp-table {
-        width: auto; /* Automatic width to fit content */
+        width: 100%; /* Fixed width to fill container */
         border-collapse: collapse;
         margin: auto;
-        border: 1px solid #ddd; /* Added border for the table */
+        border: 2px solid #ddd; /* Improved border visibility */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for attractiveness */
     }
 
     .serp-table th, .serp-table td {
         border: 1px solid #ddd;
-        padding: 10px; /* Increased padding for better spacing */
+        padding: 8px; /* Consistent padding for better spacing */
         color: #000000;
         text-align: left;
     }
@@ -173,7 +175,7 @@ st.markdown("""
     .check-button {
         display: flex;
         justify-content: center;
-        margin-top: 0.5rem;  /* Reduced margin for less gap */
+        margin-top: 0.3rem;  /* Reduced margin for less gap */
     }
 
     .stats-box {
