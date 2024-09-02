@@ -420,6 +420,8 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     <div class="info-section">
         <h2>About the SERP Similarity Tool</h2>
         <p><a href="https://www.linkedin.com/in/altamash-mapari-44502a1a2/">Altamash Mapari</a> built this tool for SEOs so that everyone can enjoy and easily check the SERP Similarity in one click. The <strong>SERP Similarity Tool</strong> is a powerful, free SERP analysis tool designed to help you compare keyword SERP results and optimize your content strategy. This free SERP tool allows you to analyze live SERP data, understand keyword SERP overlap, and gain valuable insights into your SEO performance.</p>
+ <p>lorem upsum</p>
+    
     """
 
     return similarity, table + additional_content
