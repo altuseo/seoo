@@ -420,7 +420,30 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     <div class="info-section">
         <h2>About the SERP Similarity Tool</h2>
         <p><a href="https://www.linkedin.com/in/altamash-mapari-44502a1a2/">Altamash Mapari</a> built this tool for SEOs so that everyone can enjoy and easily check the SERP Similarity in one click. The <strong>SERP Similarity Tool</strong> is a powerful, free SERP analysis tool designed to help you compare keyword SERP results and optimize your content strategy. This free SERP tool allows you to analyze live SERP data, understand keyword SERP overlap, and gain valuable insights into your SEO performance.</p>
- <p>lorem upsum</p>
+ <h2>What is SERP Similarity?</h2>
+        <p><strong>SERP Similarity</strong> refers to the comparison of search engine results pages (SERPs) for different keywords to identify commonalities and differences. By using this tool, you can analyze how similar or different the SERPs are for two keywords, helping you understand your competition and optimize your SEO strategies.</p>
+        
+        <h2>How to Use the SERP Similarity Tool</h2>
+        <ul>
+            <li><strong>Get Your SerpAPI Key</strong>: To use this free SERP check tool, you'll need a SerpAPI key. Sign up for a free account on <a href="https://serpapi.com/">SerpAPI</a>. After registering, you can find your API key in the dashboard.</li>
+            <li><strong>Enter Your API Key</strong>: Copy your SerpAPI key and paste it into the "Enter your SerpAPI Key" field in the tool.</li>
+            <li><strong>Select Search Engine, Language, and Device</strong>: Choose your preferred search engine (e.g., Google), language, and device (Desktop, Mobile, or Tablet).</li>
+            <li><strong>Enter Keywords</strong>: Input the two keywords you want to compare in the "Enter first keyword" and "Enter second keyword" fields. This keyword SERP tool will fetch the results for both keywords.</li>
+            <li><strong>Check SERP Similarity</strong>: Click on the "Check SERP Similarity" button to run a live SERP analysis. The tool will display a table showing the URLs ranking for both keywords, along with any exact matches.</li>
+        </ul>
+        
+        <h2>Understanding the Results</h2>
+        <ul>
+            <li><strong>Color Codes</strong>:
+                <ul>
+                    <li><strong>Red (#FFAAAA)</strong>: Indicates exact match URLs between both keyword SERPs.</li>
+                    <li><strong>Blue (#AEBCFF)</strong>, <strong>Green (#E2FFBD)</strong>, <strong>Purple (#F3C8FF)</strong>, etc.: Different colors highlight different levels of similarity or overlap.</li>
+                </ul>
+            </li>
+            <li><strong>Emoji 💀</strong>: The skull emoji indicates URLs that are from the same domain but different pages, providing insights into how competitors dominate the SERP with multiple URLs.</li>
+        </ul>
+        
+        <p>This free SERP analysis tool is perfect for SEOs looking to gain quick insights into keyword competition and overlap. Start using this best free SERP tool today and gain valuable insights into your SEO strategy!</p>
     
     """
 
