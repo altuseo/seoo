@@ -430,7 +430,6 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             <li><strong>Enter Keywords</strong>: Input the two keywords you want to compare in the "Enter first keyword" and "Enter second keyword" fields. This keyword SERP tool will fetch the results for both keywords.</li>
             <li><strong>Check SERP Similarity</strong>: Click on the "Check SERP Similarity" button to run a live SERP analysis. The tool will display a table showing the URLs ranking for both keywords, along with any exact matches.</li>
         </ul>
-        
         <h2>Understanding the Results</h2>
         <ul>
             <li><strong>Color Codes</strong>:
@@ -441,7 +440,6 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             </li>
             <li><strong>Emoji 💀</strong>: The skull emoji indicates URLs that are from the same domain but different pages, providing insights into how competitors dominate the SERP with multiple URLs.</li>
         </ul>
-        
         <p>This free SERP analysis tool is perfect for SEOs looking to gain quick insights into keyword competition and overlap. Start using this best free SERP tool today and gain valuable insights into your SEO strategy!</p>
     </div>
     """
