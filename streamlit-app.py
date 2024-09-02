@@ -117,11 +117,15 @@ st.markdown("""
     }
 
     .serp-table th, .serp-table td {
-        border: 1px solid #ddd;
-        padding: 8px; /* Consistent padding for better spacing */
-        color: #000000;
-        text-align: left;
-        transition: background-color 0.3s ease; /* Transition for hover effect */
+       border: 1px solid #ddd;
+    padding: 8px; /* Consistent padding for better spacing */
+    color: #000000;
+    text-align: left;
+    font-size: 12px; /* Decrease font size to fit longer URLs */
+    overflow-wrap: break-word; /* Ensures long words (like URLs) wrap within the cell */
+    max-width: 200px; /* Optional: Set a maximum width for each cell to limit the length */
+    white-space: normal; /* Ensures text wraps normally */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
     }
 
     .serp-table th {
