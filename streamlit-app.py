@@ -419,7 +419,7 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     additional_content = """
     <div class="info-section">
         <h2>About the SERP Similarity Tool</h2>
-        <p><a href="https://www.linkedin.com/in/altamash-mapari-44502a1a2/">Altamash Mapari</a> built this tool for SEOs so that everyone can enjoy and easily check the SERP Similarity in one click. The <strong>SERP Similarity Tool</strong> is a powerful, free SERP analysis tool designed to help you compare keyword SERP results and optimize your content strategy. This free SERP tool allows you to analyze live SERP data, understand keyword SERP overlap, and gain valuable insights into your SEO performance.</p>
+        <p><a href="https://www.linkedin.com/in/altamash-mapari-44502a1a2/">Altamash Mapari</a> built this tool with the help of ChatGPT & Claude for SEOs so that everyone can enjoy and easily check the SERP Similarity in one click. This free SERP tool allows you to analyze live SERP data, understand keyword SERP overlap, and gain valuable insights into your SEO performance.</p>
  <h2>What is SERP Similarity?</h2>
         <p><strong>SERP Similarity</strong> refers to the comparison of search engine results pages (SERPs) for different keywords to identify commonalities and differences. By using this tool, you can analyze how similar or different the SERPs are for two keywords, helping you understand your competition and optimize your SEO strategies.</p>
         <h2>How to Use the SERP Similarity Tool</h2>
@@ -440,7 +440,8 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             </li>
             <li><strong>Emoji 💀</strong>: The skull emoji indicates URLs that are from the same domain but different pages, providing insights into how competitors dominate the SERP with multiple URLs.</li>
         </ul>
-        <p>This free SERP analysis tool is perfect for SEOs looking to gain quick insights into keyword competition and overlap. Start using this best free SERP tool today and gain valuable insights into your SEO strategy!</p>
+       <p>This free SERP analysis tool is perfect for SEOs looking to gain quick insights into keyword competition and overlap. Start using this best free SERP tool today and gain valuable insights into your SEO strategy!</p>
+   <p>Designed with lots of love &
     </div>
     """
 
