@@ -17,12 +17,14 @@ st.markdown("""
     }
     
     .reportview-container {
-        background: #f0f2f6;
+        background: #ffffff;
     }
     .main {
         background: #ffffff;
         padding: 2rem;
+        margin: auto;
         border-radius: 10px;
+        max-width: 1200px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .stButton>button {
@@ -44,14 +46,25 @@ st.markdown("""
         cursor: text;
         width: 100%;
         padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: border-color 0.2s;
+    }
+    .stTextInput>div>div>input:focus {
+        border-color: #4CAF50;
     }
     .stSelectbox>div>div>select {
         background-color: #f9f9f9;
         color: #000000;
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
     }
     h1 {
         color: #2c3e50;
         text-align: center;
+        margin-bottom: 1rem;
     }
     .url-box {
         background-color: #f9f9f9;
@@ -70,6 +83,8 @@ st.markdown("""
         width: 100%;
         border-collapse: collapse;
         margin: auto;
+        overflow-x: auto;
+        display: block;
     }
     .serp-table th, .serp-table td {
         border: 1px solid #ddd;
@@ -106,15 +121,19 @@ st.markdown("""
     .error {
         color: #ff0000;
         font-weight: bold;
+        text-align: center;
     }
     .keyword-input {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
         margin-bottom: 1rem;
     }
     .keyword-input > div {
-        width: 45%;
+        width: 100%;
+        max-width: 500px;
+        margin: 10px 0;
     }
     .check-button {
         display: flex;
@@ -129,6 +148,9 @@ st.markdown("""
         text-align: center;
         margin-bottom: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
     }
     .stats-box h3 {
         margin-bottom: 15px;
@@ -143,12 +165,28 @@ st.markdown("""
     .stats-item strong {
         font-size: 18px;
     }
-    }
     @media only screen and (max-width: 600px) {
         .main {
             padding: 1rem;
         }
         .stButton>button {
+            width: 100%;
+        }
+        .keyword-input {
+            flex-direction: column;
+            align-items: center;
+        }
+        .keyword-input > div {
+            width: 100%;
+            margin: 5px 0;
+        }
+        .stats-box {
+            width: 100%;
+            padding: 10px;
+        }
+        .serp-table {
+            overflow-x: auto;
+            display: block;
             width: 100%;
         }
     }
@@ -264,9 +302,9 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
 def main():
     st.title("🔍 SERP Similarity Tool")
 
-    # Sidebar for API key and configuration
-    st.sidebar.header("Configuration")
-    api_key = st.sidebar.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.")
+    # Configuration section on the main page
+    st.header("Configuration")
+    api_key = st.text_input("Enter your SerpAPI Key:", type="password", help="Your SerpAPI key for fetching search results.")
     
     # Search engine selection
     search_engines = {
@@ -282,35 +320,34 @@ def main():
         "Google (Italy)": "google.it",
         # Add more search engines as needed
     }
-    search_engine = st.sidebar.selectbox(
+    search_engine = st.selectbox(
         "Select Search Engine",
         options=list(search_engines.keys()),
-        format_func=lambda x: x,
-        key="search_engine"
+        format_func=lambda x: x
     )
     
-    language = st.sidebar.selectbox("Select Language", options=[
+    language = st.selectbox("Select Language", options=[
         "en", "es", "fr", "de", "it", "pt", "zh", "ja", "ko", "ar", "ru"
     ], index=0)
-    device = st.sidebar.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
+    device = st.selectbox("Select Device", options=["Desktop", "Mobile", "Tablet"], index=0)
 
     # Keyword input
+    st.subheader("Enter Keywords")
     col1, col2 = st.columns(2)
     with col1:
-        keyword1 = st.text_input("Enter first keyword")
+        keyword1 = st.text_input("Enter first keyword", key="keyword1")
     with col2:
-        keyword2 = st.text_input("Enter second keyword")
+        keyword2 = st.text_input("Enter second keyword", key="keyword2")
 
     # Check SERP Similarity button
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        if st.button("Check SERP Similarity", key="check_similarity"):
-            if not keyword1 or not keyword2:
-                st.markdown('<p class="error">Please enter both keywords.</p>', unsafe_allow_html=True)
-            else:
-                # Run SERP comparison
-                similarity, table = compare_keywords(keyword1, keyword2, api_key, search_engines[search_engine], language, device)
-                st.markdown(table, unsafe_allow_html=True)
+    st.subheader("Check SERP Similarity")
+    if st.button("Check SERP Similarity", key="check_similarity"):
+        if not keyword1 or not keyword2:
+            st.markdown('<p class="error">Please enter both keywords.</p>', unsafe_allow_html=True)
+        else:
+            # Run SERP comparison
+            similarity, table = compare_keywords(keyword1, keyword2, api_key, search_engines[search_engine], language, device)
+            st.markdown(table, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
