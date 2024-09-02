@@ -219,10 +219,12 @@ st.markdown("""
 
     .numbering {
         text-align: center;
-        font-weight: bold;
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-right: 1px solid #ddd;
+    font-weight: bold;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+    width: 40px; /* Set a smaller width for the numbering column */
+    max-width: 40px; /* Ensure the width does not exceed this value */
     }
 
     /* Hover effect for highlighting matching URLs */
