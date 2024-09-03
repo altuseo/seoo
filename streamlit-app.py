@@ -180,17 +180,24 @@ st.markdown("""
         margin: 10px 0;
     }
 
-   .check-button {
+  .check-button {
     display: flex;
     justify-content: center;
     margin-top: 0.3rem;  /* Reduced margin for less gap */
     color: black;  /* Set the default text color */
+    background: none;  /* Remove any background */
+    border: none;  /* Remove border */
+    padding: 0;  /* Remove any padding if needed */
+    cursor: pointer;  /* Optional: Set cursor to pointer */
 }
 
+.check-button:hover,
 .check-button:focus,
 .check-button:active {
-    color: black;  /* Ensure text color stays black on focus or click */
-    outline: none; /* Optionally remove the outline if you don't want it */
+    color: black;  /* Ensure text color stays black on hover, focus, or click */
+    outline: none; /* Remove the outline */
+    background: none;  /* Ensure no background is added */
+    border: none;  /* Ensure no border is added */
 }
 
     .stats-box {
