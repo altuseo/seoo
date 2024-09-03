@@ -118,14 +118,14 @@ st.markdown("""
 
     .serp-table th, .serp-table td {
        border: 1px solid #ddd;
-    padding: 8px; /* Consistent padding for better spacing */
-    color: #000000;
-    text-align: left;
-    font-size: 12px; /* Decrease font size to fit longer URLs */
-    overflow-wrap: break-word; /* Ensures long words (like URLs) wrap within the cell */
-    max-width: 200px; /* Optional: Set a maximum width for each cell to limit the length */
-    white-space: normal; /* Ensures text wraps normally */
-    transition: background-color 0.3s ease; /* Transition for hover effect */
+       padding: 8px; /* Consistent padding for better spacing */
+       color: #000000;
+       text-align: left;
+       font-size: 12px; /* Decrease font size to fit longer URLs */
+       overflow-wrap: break-word; /* Ensures long words (like URLs) wrap within the cell */
+       max-width: 200px; /* Optional: Set a maximum width for each cell to limit the length */
+       white-space: normal; /* Ensures text wraps normally */
+       transition: background-color 0.3s ease; /* Transition for hover effect */
     }
 
     .serp-table th {
@@ -196,10 +196,19 @@ st.markdown("""
 .check-button:focus,
 .check-button:active {
     color: black !important;  /* Ensure text color stays black on hover, focus, or click */
-    outline: none; /* Remove the outline */
-    background: none;  /* Ensure no background is added */
-    border: none;  /* Ensure no border is added */
-    text-decoration: none; /* Remove underline if any */
+    outline: none !important;  /* Remove the outline */
+    background: none !important;  /* Ensure no background is added */
+    border: none !important;  /* Ensure no border is added */
+    text-decoration: none !important; /* Remove underline if any */
+}
+
+.check-button:focus-visible {
+    outline: none !important;  /* Ensure no outline on focus */
+    border: none !important;  /* Ensure no border is added */
+}
+
+body {
+    -webkit-tap-highlight-color: transparent; /* Remove highlight color on tap (for mobile devices) */
 }
 
     .stats-box {
@@ -235,12 +244,12 @@ st.markdown("""
 
     .numbering {
         text-align: center;
-    font-weight: bold;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-right: 1px solid #ddd;
-    width: 40px; /* Set a smaller width for the numbering column */
-    max-width: 40px; /* Ensure the width does not exceed this value */
+        font-weight: bold;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-right: 1px solid #ddd;
+        width: 40px; /* Set a smaller width for the numbering column */
+        max-width: 40px; /* Ensure the width does not exceed this value */
     }
 
     /* Hover effect for highlighting matching URLs */
