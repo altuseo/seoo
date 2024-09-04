@@ -32,20 +32,15 @@ st.markdown("""
     }
 
     .stButton>button {
-        background-color: #4CAF50;
-        color: white;
+        background-color: #4CAF50 !important; /* Keep button green */
+        color: white !important; /* Keep text color white */
         font-weight: bold;
         padding: 10px;
         margin: 5px 0;  /* Reduced margin for less gap */
         border-radius: 5px;
         border: none;
         width: 100%;
-        transition: all 0.3s ease;
-    }
-
-    .stButton>button:hover {
-        background-color: #45a049;
-        color: white !important;
+        transition: none; /* Remove transition effects */
     }
 
     .stTextInput>div>div>input, .stSelectbox>div>div>select {
@@ -184,27 +179,12 @@ st.markdown("""
     display: flex;
     justify-content: center;
     margin-top: 0.3rem;  /* Reduced margin for less gap */
-    color: black;  /* Set the default text color */
-    background: none;  /* Remove any background */
-    border: none;  /* Remove border */
+    color: white !important;  /* Ensure text color stays white */
+    background-color: #4CAF50 !important;  /* Keep button green */
+    border: none !important;  /* Remove border */
     padding: 0;  /* Remove any padding if needed */
     cursor: pointer;  /* Optional: Set cursor to pointer */
-    text-decoration: none; /* Remove underline if any */
-}
-
-.check-button:hover,
-.check-button:focus,
-.check-button:active {
-    color: black !important;  /* Ensure text color stays black on hover, focus, or click */
-    outline: none !important;  /* Remove the outline */
-    background: none !important;  /* Ensure no background is added */
-    border: none !important;  /* Ensure no border is added */
     text-decoration: none !important; /* Remove underline if any */
-}
-
-.check-button:focus-visible {
-    outline: none !important;  /* Ensure no outline on focus */
-    border: none !important;  /* Ensure no border is added */
 }
 
 body {
