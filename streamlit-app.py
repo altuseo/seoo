@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from serpapi import GoogleSearch
 from urllib.parse import urlparse
+from collections import Counter
+import itertools
 import random
 
 # Set page config for a wider layout
@@ -144,6 +146,57 @@ st.markdown("""
         color: #fff;
     }
 
+    .ngram-table-container {
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+
+    .ngram-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .ngram-table th, .ngram-table td {
+       border: 1px solid #ddd;
+       padding: 8px;
+       text-align: left;
+       font-size: 14px;
+    }
+
+    .ngram-table th {
+        background-color: #4CAF50;
+        color: #ffffff;
+    }
+
+    .word-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f8ff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .word-cloud span {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 5px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: #4CAF50;
+        color: white;
+    }
+
     .exact-match {
         background-color: #FFAAAA;
         border: 2px solid #4EFF03;
@@ -175,21 +228,9 @@ st.markdown("""
         margin: 10px 0;
     }
 
- .check-button {
-    display: flex;
-    justify-content: center;
-    margin-top: 0.3rem;  /* Reduced margin for less gap */
-    color: white !important;  /* Ensure text color stays white */
-    background-color: #4CAF50 !important;  /* Keep button green */
-    border: none !important;  /* Remove border */
-    padding: 0;  /* Remove any padding if needed */
-    cursor: pointer;  /* Optional: Set cursor to pointer */
-    text-decoration: none !important; /* Remove underline if any */
-}
-
-body {
-    -webkit-tap-highlight-color: transparent; /* Remove highlight color on tap (for mobile devices) */
-}
+    body {
+        -webkit-tap-highlight-color: transparent; /* Remove highlight color on tap (for mobile devices) */
+    }
 
     .stats-box {
         background: linear-gradient(45deg, #3498db, #2ecc71);
@@ -325,6 +366,45 @@ def get_serp_comp(results):
             serp_comp.append(x["link"])
     return serp_comp
 
+def extract_titles(results):
+    titles = []
+    if "organic_results" in results:
+        for x in results["organic_results"]:
+            titles.append(x.get("title", ""))
+    return titles
+
+def ngram_analysis(titles):
+    unigrams = Counter(itertools.chain.from_iterable(title.lower().split() for title in titles))
+    bigrams = Counter(itertools.chain.from_iterable(zip(title.lower().split(), title.lower().split()[1:]) for title in titles))
+    trigrams = Counter(itertools.chain.from_iterable(zip(title.lower().split(), title.lower().split()[1:], title.lower().split()[2:]) for title in titles))
+    
+    return unigrams, bigrams, trigrams
+
+def generate_ngram_table(unigrams, bigrams, trigrams):
+    table = f"""
+    <div class="ngram-table-container">
+        <h2 style="text-align: center;">N-gram Analysis</h2>
+        <table class="ngram-table">
+            <tr><th>N-gram</th><th>Frequency</th></tr>
+    """
+    for ngram, freq in unigrams.most_common(10):
+        table += f"<tr><td>{ngram}</td><td>{freq}</td></tr>"
+    table += "</table><br/><table class='ngram-table'><tr><th>Bi-gram</th><th>Frequency</th></tr>"
+    for ngram, freq in bigrams.most_common(10):
+        table += f"<tr><td>{' '.join(ngram)}</td><td>{freq}</td></tr>"
+    table += "</table><br/><table class='ngram-table'><tr><th>Tri-gram</th><th>Frequency</th></tr>"
+    for ngram, freq in trigrams.most_common(10):
+        table += f"<tr><td>{' '.join(ngram)}</td><td>{freq}</td></tr>"
+    table += "</table></div>"
+    return table
+
+def generate_word_cloud(keywords):
+    cloud_html = '<div class="word-cloud">'
+    for keyword in keywords:
+        cloud_html += f'<span>{keyword}</span>'
+    cloud_html += '</div>'
+    return cloud_html
+
 def compare_keywords(keyword1, keyword2, api_key, search_engine, language, device):
     params = {
         "engine": "google",
@@ -345,9 +425,11 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     search = GoogleSearch(params)
     results2 = search.get_dict()
 
-    # Extract URLs from search results
+    # Extract URLs and titles from search results
     urls1 = get_serp_comp(results1)
     urls2 = get_serp_comp(results2)
+    titles1 = extract_titles(results1)
+    titles2 = extract_titles(results2)
 
     # Define color codes
     colors = ["#FFAAAA", "#AEBCFF", "#E2FFBD", "#F3C8FF", "#FFBD59", "#D9D9D9", "#FF904C", "#FF6D6D", "#68E9FF", "#4EFF03"]
@@ -426,6 +508,16 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
             table += f'<tr><td colspan="3" class="matched-line" style="background-color: {color_map[url1]};">&#x2194; Match the following lines</td></tr>'
     table += f'</table>{lines_html}</div>'
 
+    # Perform N-gram analysis
+    all_titles = titles1 + titles2
+    unigrams, bigrams, trigrams = ngram_analysis(all_titles)
+    ngram_table = generate_ngram_table(unigrams, bigrams, trigrams)
+
+    # Generate People Also Search For section
+    pasf_keywords = [result.get('related_keywords', []) for result in [results1, results2] if 'related_keywords' in result]
+    pasf_keywords = list(itertools.chain.from_iterable(pasf_keywords))[:8]  # Limit to top 8 keywords
+    pasf_cloud = generate_word_cloud(pasf_keywords)
+
     # Additional content section
     additional_content = """
     <div class="info-section">
@@ -456,7 +548,7 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     </div>
     """
 
-    return similarity, table + additional_content
+    return similarity, table + ngram_table + pasf_cloud + additional_content
 
 def main():
     st.title("🔍 SERP Similarity Tool")
