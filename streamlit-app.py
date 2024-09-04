@@ -157,27 +157,27 @@ st.markdown("""
 
     .ngram-table {
         width: 100%;
-        border-collapse: collapse;
-        margin: auto;
-        border: 2px solid #ddd; /* Match table border to SERP similarity table */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+    table-layout: fixed; /* Ensures consistent column width */
+    border-collapse: collapse;
+    margin: auto;
+    border: 2px solid #ddd; /* Match table border to SERP similarity table */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
     .ngram-table th, .ngram-table td {
-       border: 1px solid #ddd;
-       padding: 8px;
-       text-align: left;
-       font-size: 12px; /* Uniform font size */
-       color: #000000;
-       text-align: left;
-    }
+   border: 1px solid #ddd;
+   padding: 8px;
+   text-align: left;
+   font-size: 12px; /* Uniform font size */
+   color: #000000;
+}
 
-    .ngram-table th {
-        background-color: #383838; /* Match SERP similarity table heading color */
-        color: #ffffff;
-        text-align: center;
-        font-weight: bold;
-    }
+   .ngram-table th {
+    background-color: #383838; /* Match SERP similarity table heading color */
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+}
 
     .exact-match {
         background-color: #FFAAAA;
@@ -371,15 +371,19 @@ def generate_ngram_table(unigrams, bigrams, trigrams):
     """
     for ngram, freq in unigrams.most_common(10):
         table += f"<tr><td>{ngram}</td><td>{freq}</td></tr>"
+    
+    # Remove any unnecessary line breaks or styles
     table += """
-        </table><br><br>
+        </table>
         <table class="ngram-table">
             <tr><th>Bi-gram</th><th>Frequency</th></tr>
     """
     for ngram, freq in bigrams.most_common(10):
         table += f"<tr><td>{' '.join(ngram)}</td><td>{freq}</td></tr>"
+    
+    # Again, keep the structure consistent
     table += """
-        </table><br><br>
+        </table>
         <table class="ngram-table">
             <tr><th>Tri-gram</th><th>Frequency</th></tr>
     """
