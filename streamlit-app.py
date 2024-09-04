@@ -126,7 +126,7 @@ st.markdown("""
     }
 
     .serp-table th {
-        background-color: #383838;
+        background-color: #383838; /* Match SERP similarity table heading color */
         color: #ffffff;
         text-align: center;
         font-weight: bold;
@@ -159,7 +159,7 @@ st.markdown("""
         width: 100%;
         border-collapse: collapse;
         margin: auto;
-        border: 1px solid #ddd;
+        border: 2px solid #ddd; /* Match table border to SERP similarity table */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -167,34 +167,16 @@ st.markdown("""
        border: 1px solid #ddd;
        padding: 8px;
        text-align: left;
-       font-size: 14px;
+       font-size: 12px; /* Uniform font size */
+       color: #000000;
+       text-align: left;
     }
 
     .ngram-table th {
-        background-color: #4CAF50;
+        background-color: #383838; /* Match SERP similarity table heading color */
         color: #ffffff;
-    }
-
-    .word-cloud {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        background-color: #f0f8ff;
-        border-radius: 10px;
-        padding: 15px;
-        margin-top: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .word-cloud span {
-        font-size: 18px;
+        text-align: center;
         font-weight: bold;
-        margin: 5px;
-        padding: 5px 10px;
-        border-radius: 5px;
-        background-color: #4CAF50;
-        color: white;
     }
 
     .exact-match {
@@ -385,25 +367,26 @@ def generate_ngram_table(unigrams, bigrams, trigrams):
     <div class="ngram-table-container">
         <h2 style="text-align: center;">N-gram Analysis</h2>
         <table class="ngram-table">
-            <tr><th>N-gram</th><th>Frequency</th></tr>
+            <tr><th>Unigram</th><th>Frequency</th></tr>
     """
     for ngram, freq in unigrams.most_common(10):
         table += f"<tr><td>{ngram}</td><td>{freq}</td></tr>"
-    table += "</table><br/><table class='ngram-table'><tr><th>Bi-gram</th><th>Frequency</th></tr>"
+    table += """
+        </table><br><br>
+        <table class="ngram-table">
+            <tr><th>Bi-gram</th><th>Frequency</th></tr>
+    """
     for ngram, freq in bigrams.most_common(10):
         table += f"<tr><td>{' '.join(ngram)}</td><td>{freq}</td></tr>"
-    table += "</table><br/><table class='ngram-table'><tr><th>Tri-gram</th><th>Frequency</th></tr>"
+    table += """
+        </table><br><br>
+        <table class="ngram-table">
+            <tr><th>Tri-gram</th><th>Frequency</th></tr>
+    """
     for ngram, freq in trigrams.most_common(10):
         table += f"<tr><td>{' '.join(ngram)}</td><td>{freq}</td></tr>"
     table += "</table></div>"
     return table
-
-def generate_word_cloud(keywords):
-    cloud_html = '<div class="word-cloud">'
-    for keyword in keywords:
-        cloud_html += f'<span>{keyword}</span>'
-    cloud_html += '</div>'
-    return cloud_html
 
 def compare_keywords(keyword1, keyword2, api_key, search_engine, language, device):
     params = {
@@ -513,11 +496,6 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     unigrams, bigrams, trigrams = ngram_analysis(all_titles)
     ngram_table = generate_ngram_table(unigrams, bigrams, trigrams)
 
-    # Generate People Also Search For section
-    pasf_keywords = [result.get('related_keywords', []) for result in [results1, results2] if 'related_keywords' in result]
-    pasf_keywords = list(itertools.chain.from_iterable(pasf_keywords))[:8]  # Limit to top 8 keywords
-    pasf_cloud = generate_word_cloud(pasf_keywords)
-
     # Additional content section
     additional_content = """
     <div class="info-section">
@@ -548,7 +526,7 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     </div>
     """
 
-    return similarity, table + ngram_table + pasf_cloud + additional_content
+    return similarity, table + ngram_table + additional_content
 
 def main():
     st.title("🔍 SERP Similarity Tool")
