@@ -365,7 +365,7 @@ def ngram_analysis(titles):
 def generate_ngram_table(unigrams, bigrams, trigrams):
     table = f"""
     <div class="ngram-table-container">
-        <h2 style="text-align: center;">N-gram Analysis</h2>
+        <h2 style="text-align: center;">N-gram Analysis Based on Top 10 Titles</h2>
         <table class="ngram-table">
             <tr><th>Unigram</th><th>Frequency</th></tr>
     """
