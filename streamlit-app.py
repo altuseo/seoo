@@ -396,7 +396,7 @@ def compare_keywords(keyword1, keyword2, api_key, search_engine, language, devic
     params = {
         "engine": "google",
         "q": keyword1,
-        "gl": "us" if search_engine == "USA" else search_engine.split('.')[-1],
+        "gl": "us" if search_engine == "google.com" else search_engine.split('.')[-1],
         "hl": language,
         "num": 20,  # Request more results to ensure we get at least 10
         "api_key": api_key,
